@@ -26,7 +26,7 @@ vizboard:
 commit: .git
 	# NOT RECOMMENDED 
 	git add -A
-	git commit -m 'Updaet project'
+	-git commit -m 'Updaet project'
 
 
 push: commit

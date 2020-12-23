@@ -24,6 +24,7 @@ vizboard:
 
 
 commit: .git
+	# NOT RECOMMENDED 
 	git add -A
 	git commit -m 'Updaet project'
 

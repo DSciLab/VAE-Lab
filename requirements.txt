@@ -1,0 +1,6 @@
+git+git://github.com/DSciLab/cfg
+git+git://github.com/DSciLab/vizboard
+torch
+torchvision
+numpy
+tqdm

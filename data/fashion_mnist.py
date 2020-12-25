@@ -4,8 +4,8 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 
 
-normalize = transforms.Normalize(mean=[0.1307],
-                                 std=[0.30150])
+normalize = transforms.Normalize(mean=[0.2860],
+                                 std=[0.32045])
 
 
 def get_fashion_mnist(opt):

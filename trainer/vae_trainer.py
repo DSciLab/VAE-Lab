@@ -1,4 +1,3 @@
-from models.classifier import BasicClassifier
 from mlutils import Trainer
 
 

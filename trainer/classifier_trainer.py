@@ -21,7 +21,8 @@ class ClassificationTrainer(Trainer):
         loss.backward()
         self.optimizer.step()
 
-        return loss, proba, labels
+        self.dashboard.add_trace('loss', loss)
+        return loss.detach(), proba, labels
 
     def eval_step(self, item):
         images, labels = item
@@ -31,7 +32,11 @@ class ClassificationTrainer(Trainer):
         proba, logit = self.model(images)
         loss = self.loss_fn(logit, labels)
 
-        return loss, proba, labels
+        self.dashboard.add_trace('loss', loss)
+        return loss.detach(), proba, labels
+
+    def inference(self, image):
+        pass
 
     def on_epoch_begin(self):
         pass

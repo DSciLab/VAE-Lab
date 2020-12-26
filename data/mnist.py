@@ -1,6 +1,5 @@
 from torchvision import datasets
 import os
-from torch.utils.data import DataLoader
 from torchvision import transforms
 
 
@@ -31,16 +30,5 @@ def get_mnist(opt):
                                    download=True,
                                    transform=eval_transformer),
 
-    train_loader = DataLoader(training_dataset,
-                              batch_size=opt.batch_size,
-                              shuffle=True,
-                              num_workers=opt.num_workers,
-                              pin_memory=True)
 
-    eval_loader = DataLoader(eval_dataset,
-                             batch_size=128,
-                             shuffle=False,
-                             num_workers=opt.num_workers,
-                             pin_memory=True)
-
-    return train_loader, eval_loader
+    return training_dataset, eval_dataset

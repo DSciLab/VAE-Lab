@@ -1,4 +1,3 @@
-from _typeshed import ReadableBuffer
 from .classifier.basic import BasicClassifier
 from .vae.basic import BasicVAE
 

@@ -1,13 +1,12 @@
-from mlutils import mlutils
-from mlutils.mlutils.metrics import Accuracy
+from mlutils.metrics import Accuracy
 from torch.optim import SGD
 from torch.optim.lr_scheduler import MultiStepLR
 from torch.optim.optimizer import Optimizer
 from cfg import Opts
 from torch.utils.data import DataLoader
-from .data import get_data
-from .networks import get_classifier
-from .trainer import get_trainer
+from data import get_data
+from networks import get_classifier
+from trainer import get_trainer
 from mlutils.metrics import *
 
 

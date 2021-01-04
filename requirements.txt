@@ -1,5 +1,5 @@
-git+git://github.com/DSciLab/cfg
-git+git://github.com/DSciLab/vizboard
+git+https://github.com/DSciLab/cfg.git
+git+https://github.com/DSciLab/mlutils.git
 torch
 torchvision
 numpy

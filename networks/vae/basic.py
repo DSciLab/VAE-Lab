@@ -1,7 +1,5 @@
-from mlutils.mlutils import log
 import torch
 import torch.nn as nn
-import numpy as np
 
 
 class Encoder(nn.Module):

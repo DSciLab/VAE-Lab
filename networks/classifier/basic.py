@@ -11,20 +11,20 @@ class BasicClassifier(nn.Module):
 
         self.fc = nn.Sequential(
             nn.Dropout2d(0.25),
-            nn.Linear(9216, 128),
+            nn.Linear(64, 64),
             nn.ReLU(),
             nn.Dropout(),
-            nn.Linear(128, opt.num_classes)
+            nn.Linear(64, opt.num_classes)
         )
 
     def forward(self, x):
         # imput resolution 28*28
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
-        x = F.max_pool2d(x, dim=2)
+        x = F.adaptive_avg_pool2d(x, (1, 1))
 
-        x = torch.flatten(x, start_dim=1)
+        x = torch.flatten(x, 1)
         out = self.fc(x)
-        prob_out = F.softmax(out)
+        prob_out = F.softmax(out, dim=1)
         
         return prob_out, out

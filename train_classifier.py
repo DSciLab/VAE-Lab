@@ -1,8 +1,8 @@
 from mlutils.metrics import Accuracy
 from torch.optim import SGD
 from torch.optim.lr_scheduler import MultiStepLR
-from torch.optim.optimizer import Optimizer
 from cfg import Opts
+import mlutils
 from torch.utils.data import DataLoader
 from data import get_data
 from networks import get_classifier
@@ -45,14 +45,22 @@ def main(opt):
 
     acc_metric = Accuracy(opt)
 
-    trainer.add_metrics(acc_metric)
+    trainer.set_metrics(acc_metric)
     train(opt, trainer, train_dataset, eval_dataset)
 
 
 if __name__ == '__main__':
     Opts.add_float('lr', 0.1, 'learning rate')
     Opts.add_int('batch_size', 128, 'batch size')
+    Opts.add_int('image_chan', 1, 'image channel')
+    Opts.add_int('num_classes', 10, 'number of classes')
+    Opts.add_int('num_workers', 5, 'number of workers')
+    Opts.add_int('epochs', 100)
+    Opts.add_int('device', 1)
+    Opts.add_string('dataset', 'MNIST', 'dataset name')
     Opts.add_string('data_root', '/data/cwj/data/VAELab')
+    Opts.add_string('trainer', 'classification')
+    Opts.add_string('classifier', 'basic')
 
     opt = Opts()
 

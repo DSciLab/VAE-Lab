@@ -1,6 +1,5 @@
-git+https://github.com/DSciLab/cfg.git
-git+https://github.com/DSciLab/mlutils.git
 torch
 torchvision
 numpy
 tqdm
+scikit-learn

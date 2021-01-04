@@ -2,13 +2,16 @@ MAKE			:= make
 PIP				:= pip
 REQUIREMENTS	:= requirements.txt
 CFG_DIR			:= cfg
-VIZBOARD_DIR	:= vizboard
+MLUTILS_DIR		:= mlutils
 
 
-.PHONY: all dep cfg vizboard
+.PHONY: all dep cfg mlutils install
 
 
-all: dep cfg vizboard commit push
+all: dep cfg mlutils commit push
+
+
+install: install_cfg install_mlutils
 
 
 dep: $(REQUIREMENTS)
@@ -19,8 +22,16 @@ cfg:
 	$(MAKE) -C $(CFG_DIR)
 
 
-vizboard:
-	$(MAKE) -C $(VIZBOARD_DIR)
+mlutils:
+	$(MAKE) -C $(MLUTILS_DIR)
+
+
+install_cfg:
+	$(MAKE) -C $(CFG_DIR) install
+
+
+install_mlutils:
+	$(MAKE) -C $(MLUTILS_DIR) install
 
 
 commit: .git

@@ -71,4 +71,4 @@ class BasicVAE(nn.Module):
         mu, logvar = self.encoder(x)
         z = self.encoder.reparameterize(mu, logvar)
         x = self.decoder(z)
-        return x
+        return mu, logvar, x

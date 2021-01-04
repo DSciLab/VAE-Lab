@@ -1,21 +1,75 @@
-from utils.trainer import VAETrainer
+from mlutils.metrics import Accuracy
+from torch.optim import SGD
+from torch.optim.lr_scheduler import MultiStepLR
 from cfg import Opts
-from models.basic_vae import BasicVAE
-from utils.trainer import VAETrainer
+import mlutils
+from mlutils import Log
+from torch.utils.data import DataLoader
+from data import get_data
+from networks import get_vae
+from trainer import get_trainer
+from mlutils.metrics import *
 
 
-def train(trainer):
-    pass
+def train(opt, trainer, training_dataset, eval_dataset):
+    train_loader = DataLoader(training_dataset,
+                              batch_size=opt.batch_size,
+                              shuffle=True,
+                              num_workers=opt.num_workers,
+                              pin_memory=True)
+
+    eval_loader = DataLoader(eval_dataset,
+                             batch_size=opt.batch_size,
+                             shuffle=False,
+                             num_workers=opt.num_workers,
+                             pin_memory=True)
+
+    trainer.train(train_loader, eval_loader)
 
 
 def main(opt):
-    vae = BasicVAE(opt)
-    trainer = VAETrainer(opt)
+    train_dataset, eval_dataset = get_data(opt)
 
+    vae_cls = get_vae(opt)
+    vae = vae_cls(opt)
+
+    optimizer = SGD(vae.parameters(),
+                          lr=opt.lr,
+                          momentum=0.9)
+    scheduler = MultiStepLR(optimizer,
+                            milestones=[50, 80],
+                            gamma=0.1)
+    
+    trainer_cls = get_trainer(opt)
+    trainer = trainer_cls(opt, vae,
+                          optimizer, scheduler)
+
+    # trainer.set_metrics()
+    train(opt, trainer, train_dataset, eval_dataset)
 
 
 if __name__ == '__main__':
-    Opts.add_float('lr', 'leaning rate', 0.1)
+    Opts.add_float('lr', 0.1, 'learning rate')
+    Opts.add_int('batch_size', 128, 'batch size')
+    Opts.add_int('image_chan', 1, 'image channel')
+    Opts.add_int('num_classes', 10, 'number of classes')
+    Opts.add_int('num_workers', 5, 'number of workers')
+    Opts.add_int('epochs', 100)
+    Opts.add_int('device', 1)
+    Opts.add_int('width', 28, 'image width')
+    Opts.add_int('z_dim', 128, 'latent space dim')
+    Opts.add_bool('debug', False)
+    Opts.add_bool('dashboard', True, 'enable/disable dashboard.')
+    Opts.add_bool('dashboard_server', True, 'start dashboard server.')
+    Opts.add_string('dataset', 'MNIST', 'dataset name')
+    Opts.add_string('data_root', '/data/cwj/data/VAELab')
+    Opts.add_string('trainer', 'vae')
+    Opts.add_string('vae', 'basic')
 
     opt = Opts()
+
+    if opt.debug:
+        Log.set_level(Log.DEBUG)
+
+    mlutils.init(opt)
     main(opt)

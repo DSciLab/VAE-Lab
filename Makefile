@@ -8,7 +8,7 @@ MLUTILS_DIR		:= mlutils
 .PHONY: all dep cfg mlutils install
 
 
-all: dep cfg mlutils commit push
+all: dep install
 
 
 install: install_cfg install_mlutils

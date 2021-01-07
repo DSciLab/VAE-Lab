@@ -48,8 +48,25 @@ class VAETrainer(Trainer):
         #                                 'image': images})
         return loss.detach(), gen_images, images
 
-    def inference(self, image):
-        pass
+    def infer(self, item):
+        images, labels = item
+        images = self.to_gpu(images)
+        labels = self.to_gpu(labels)
+
+        mu, logvar, gen_images = self.model(images)
+        loss = self.loss_fn(gen_images, images, mu, logvar)
+
+        # self.dashboard.add_image_dict({'gen_image': gen_images,
+        #                                 'image': images})
+        return loss.detach(), gen_images, images
+
+    def infer_image(self, image):
+        image = self.to_gpu(image)
+        _, _, gen_image = self.model(image)
+        self.dashboard.add_image_dict(
+            {'gen_image': gen_image,
+             'image': image})
+        return gen_image
 
     def on_epoch_begin(self):
         pass

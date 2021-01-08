@@ -57,7 +57,7 @@ if __name__ == '__main__':
     Opts.add_int('device', 1)
     Opts.add_int('width', 64, 'image width')
     Opts.add_int('z_dim', 128, 'latent space dim')
-    Opts.add_int('kld_weight', 0.15, 'KLD Loss weight')
+    Opts.add_int('kld_weight', 0.015, 'KLD Loss weight')
     Opts.add_bool('debug', False)
     Opts.add_bool('dashboard', True, 'enable/disable dashboard.')
     Opts.add_int('dashboard_port', 10010)

@@ -1,14 +1,21 @@
-from torchvision import datasets
 import os
-from torch.utils.data import DataLoader
+from torchvision import datasets
 from torchvision import transforms
 
+from .utils import LinearNormalize
 
-normalize = transforms.Normalize(mean=[0.2860],
+
+normalize_fn = transforms.Normalize(mean=[0.2860],
                                  std=[0.32045])
+linear_normalize_fn = LinearNormalize()
 
 
 def get_fashion_mnist(opt):
+    if opt.get('normalize', 'normalize') == 'linear':
+        normalize = linear_normalize_fn
+    else:
+        normalize = normalize_fn
+
     training_transformer = transforms.Compose([
                             transforms.RandomHorizontalFlip(),
                             transforms.RandomCrop(28, 4),
@@ -29,18 +36,6 @@ def get_fashion_mnist(opt):
     eval_dataset =  datasets.FashionMNIST(root=data_root, 
                                           train=False,
                                           download=True,
-                                          transform=eval_transformer),
-
-    train_loader = DataLoader(training_dataset,
-                              batch_size=opt.batch_size,
-                              shuffle=True,
-                              num_workers=opt.num_workers,
-                              pin_memory=True)
-
-    eval_loader = DataLoader(eval_dataset,
-                             batch_size=128,
-                             shuffle=False,
-                             num_workers=opt.num_workers,
-                             pin_memory=True)
+                                          transform=eval_transformer)
 
     return train_loader, eval_loader

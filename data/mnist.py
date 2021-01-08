@@ -1,13 +1,21 @@
-from torchvision import datasets
 import os
+from torchvision import datasets
 from torchvision import transforms
 
+from .utils import LinearNormalize
 
-normalize = transforms.Normalize(mean=[0.1307],
+
+normalize_fn = transforms.Normalize(mean=[0.1307],
                                  std=[0.30150])
+linear_normalize_fn = LinearNormalize()
 
 
 def get_mnist(opt):
+    if opt.get('normalize', 'normalize') == 'linear':
+        normalize = linear_normalize_fn
+    else:
+        normalize = normalize_fn
+
     training_transformer = transforms.Compose([
                             transforms.RandomHorizontalFlip(),
                             transforms.RandomCrop(28, 4),
@@ -29,6 +37,5 @@ def get_mnist(opt):
                                    train=False,
                                    download=True,
                                    transform=eval_transformer)
-
 
     return training_dataset, eval_dataset

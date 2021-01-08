@@ -1,5 +1,5 @@
 from mlutils.metrics import Accuracy
-from torch.optim import SGD
+from torch.optim import SGD, Adam
 from torch.optim.lr_scheduler import MultiStepLR
 from cfg import Opts
 import mlutils
@@ -33,9 +33,8 @@ def main(opt):
     vae_cls = get_vae(opt)
     vae = vae_cls(opt)
 
-    optimizer = SGD(vae.parameters(),
-                          lr=opt.lr,
-                          momentum=0.9)
+    optimizer = Adam(vae.parameters(),
+                          lr=opt.lr)
     scheduler = MultiStepLR(optimizer,
                             milestones=[50, 80],
                             gamma=0.1)
@@ -49,22 +48,25 @@ def main(opt):
 
 
 if __name__ == '__main__':
-    Opts.add_float('lr', 0.1, 'learning rate')
-    Opts.add_int('batch_size', 128, 'batch size')
-    Opts.add_int('image_chan', 1, 'image channel')
+    Opts.add_float('lr', 0.005, 'learning rate')
+    Opts.add_int('batch_size', 256, 'batch size')
+    Opts.add_int('image_chan', 3, 'image channel')
     Opts.add_int('num_classes', 10, 'number of classes')
     Opts.add_int('num_workers', 5, 'number of workers')
-    Opts.add_int('epochs', 100)
+    Opts.add_int('epochs', 10000)
     Opts.add_int('device', 1)
-    Opts.add_int('width', 28, 'image width')
+    Opts.add_int('width', 64, 'image width')
     Opts.add_int('z_dim', 128, 'latent space dim')
+    Opts.add_int('kld_weight', 0.15, 'KLD Loss weight')
     Opts.add_bool('debug', False)
     Opts.add_bool('dashboard', True, 'enable/disable dashboard.')
-    Opts.add_bool('dashboard_server', True, 'start dashboard server.')
-    Opts.add_string('dataset', 'MNIST', 'dataset name')
+    Opts.add_int('dashboard_port', 10010)
+    Opts.add_int('dashboard_server', False)
+    Opts.add_string('normalize', 'linear')
+    Opts.add_string('dataset', 'CELEBA', 'dataset name')
     Opts.add_string('data_root', '/data/cwj/data/VAELab')
     Opts.add_string('trainer', 'vae')
-    Opts.add_string('vae', 'basic')
+    Opts.add_string('vae', 'vanilla')
 
     opt = Opts()
 

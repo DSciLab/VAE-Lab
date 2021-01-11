@@ -5,7 +5,7 @@ import mlutils
 from mlutils import Log
 from torch.utils.data import DataLoader
 from trainer import get_trainer
-from data import get_data
+from nature_datasets import get_data
 from networks import get_vae
 import time
 

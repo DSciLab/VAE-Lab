@@ -94,7 +94,7 @@ class Decoder(nn.Module):
 
 class Discriminator(nn.Module):
     def __init__(self, opt):
-        super(Discriminator).__init__()
+        super(Discriminator, self).__init__()
         in_channels = opt.image_chan
 
         modules = []
@@ -114,8 +114,11 @@ class Discriminator(nn.Module):
             in_channels = h_dim
 
         self.feat = nn.Sequential(*modules)
-        self.gap = nn.AdaptiveAvgPool1d((1, 1))
-        self.fc = nn.Linear(512, 1)
+        self.gap = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Sequential(
+            nn.Linear(512, 1),
+            nn.Sigmoid()
+        )
 
     def forward(self, x):
         x = self.feat(x)
@@ -125,9 +128,9 @@ class Discriminator(nn.Module):
         return x
 
 
-class VanillaVAED(nn.Module):
+class VanillaVAE(nn.Module):
     def __init__(self, opt):
-        super(VanillaVAED, self).__init__()
+        super(VanillaVAE, self).__init__()
         self.encoder = Encoder(opt)
         self.decoder = Decoder(opt)
 

@@ -12,7 +12,7 @@ class VAEDTrainer(Trainer):
     def __init__(self, opt):
         super().__init__(opt)
         self.kld_weight = opt.kld_weight
-        vae = vanilla_d.VanillaVAED(opt)
+        vae = vanilla_d.VanillaVAE(opt)
         disc = vanilla_d.Discriminator(opt)
         self.vae = self.to_gpu(vae)
         self.disc = self.to_gpu(disc)
@@ -43,19 +43,19 @@ class VAEDTrainer(Trainer):
         self.update_label(batch_size)
 
 
-        mu, logvar, fake = self.model(images)
+        mu, logvar, fake = self.vae(images)
         # train generator
         self.optimizerG.zero_grad()
         kld_loss = self.kld_loss(mu, logvar)
-        g_loss = self.bce_loss(self.D(fake), self.valid)
+        g_loss = self.bce_loss(self.disc(fake), self.valid)
         vae_loss = kld_loss + g_loss
         vae_loss.backward()
         self.optimizerG.step()
 
         # train discriminator
         self.optimizerD.zero_grad()
-        d_real_loss = self.bce_loss(self.D(images), self.valid)
-        d_fake_loss = self.bce_loss(self.D(fake.detach()), self.fake)
+        d_real_loss = self.bce_loss(self.disc(images), self.valid)
+        d_fake_loss = self.bce_loss(self.disc(fake.detach()), self.fake)
         d_loss = (d_fake_loss + d_real_loss) / 2.0
         d_loss.backward()
         self.optimizerD.step()
@@ -74,16 +74,16 @@ class VAEDTrainer(Trainer):
         batch_size = images.size(0)
         self.update_label(batch_size)
 
-        mu, logvar, fake = self.model(images)
+        mu, logvar, fake = self.vae(images)
 
         # eval generator
         kld_loss = self.kld_loss(mu, logvar)
-        g_loss = self.bce_loss(self.D(fake), self.valid)
+        g_loss = self.bce_loss(self.disc(fake), self.valid)
         vae_loss = kld_loss + g_loss
 
         # eval discriminator
-        d_real_loss = self.bce_loss(self.D(images), self.valid)
-        d_fake_loss = self.bce_loss(self.D(fake), self.fake)
+        d_real_loss = self.bce_loss(self.disc(images), self.valid)
+        d_fake_loss = self.bce_loss(self.disc(fake), self.fake)
         d_loss = (d_real_loss + d_fake_loss) / 2.0
 
         self.dashboard.add_image_dict({'eval_fake': fake,

@@ -32,7 +32,7 @@ def main(opt):
 
 if __name__ == '__main__':
     '''
-    VAE with discriminator
+    VAE with classifier
     '''
     Opts.add_yaml('dataset', 'CELEBA', './conf/dataset/celeba.yaml')
     Opts.add_yaml('dataset', 'MNIST', './conf/dataset/mnist.yaml')
@@ -41,6 +41,7 @@ if __name__ == '__main__':
     Opts.add_int('num_workers', 5, 'number of workers')
     Opts.add_int('epochs', 10000)
     Opts.add_int('device', 1)
+    Opts.add_int('image_size', 64)
     Opts.add_int('z_dim', 128, 'latent space dim')
     Opts.add_int('kld_weight', 0.015, 'KLD Loss weight')
     Opts.add_bool('debug', False)
@@ -48,8 +49,8 @@ if __name__ == '__main__':
     Opts.add_int('dashboard_port', 10010)
     Opts.add_int('dashboard_server', False)
     Opts.add_string('normalize', 'linear')
-    Opts.add_string('dataset', 'CELEBA', 'dataset name')
-    Opts.add_string('trainer', 'VanillaVAED')
+    Opts.add_string('dataset', 'MNIST', 'dataset name')
+    Opts.add_string('trainer', 'VanillaVAEC')
 
     opt = Opts()
 

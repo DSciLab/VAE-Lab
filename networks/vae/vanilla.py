@@ -48,6 +48,7 @@ class Encoder(nn.Module):
 class Decoder(nn.Module):
     def __init__(self, opt):
         super().__init__()
+        out_channels = opt.image_chan
         latent_dim = opt.z_dim
         hidden_dims = opt.get('hidden_dims', [32, 64, 128, 256, 512])
 
@@ -79,7 +80,7 @@ class Decoder(nn.Module):
                     nn.BatchNorm2d(hidden_dims[-1]),
                     nn.LeakyReLU(),
                     nn.Conv2d(hidden_dims[-1],
-                                out_channels = 3,
+                                out_channels = out_channels,
                                 kernel_size = 3,
                                 padding = 1),
                     nn.Tanh())

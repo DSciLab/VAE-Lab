@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torch.types import Number
 
 
 class Encoder(nn.Module):
@@ -129,6 +130,23 @@ class Discriminator(nn.Module):
         return x
 
 
+class Classifier(nn.Module):
+    def __init__(self, opt):
+        super().__init__()
+        self.laten_dim = opt.z_dim
+        self.num_classes = opt.num_classes
+
+        self.fc = nn.Sequential(
+            nn.Linear(self.laten_dim, self.laten_dim // 2),
+            nn.ReLU(),
+            nn.Linear(self.laten_dim // 2, self.num_classes)
+        )
+
+    def forward(self, z):
+        y = self.fc(z)
+        return y
+
+
 class VanillaVAE(nn.Module):
     def __init__(self, opt):
         super(VanillaVAE, self).__init__()
@@ -139,7 +157,7 @@ class VanillaVAE(nn.Module):
         mu, logvar = self.encoder(x)
         z = self.encoder.reparameterize(mu, logvar)
         x_hat = self.decoder(z)
-        return mu, logvar, x_hat
+        return mu, logvar, x_hat, z
 
     def sample(self, num_samples, device, **kwargs):
         z = torch.randn(num_samples, self.latent_dim)

@@ -3,6 +3,7 @@ PIP				:= pip
 REQUIREMENTS	:= requirements.txt
 CFG_DIR			:= cfg
 MLUTILS_DIR		:= mlutils
+NATURE_DATASETS	:= nature_datasets
 
 
 .PHONY: all dep cfg mlutils install
@@ -11,34 +12,20 @@ MLUTILS_DIR		:= mlutils
 all: dep install
 
 
-install: install_cfg install_mlutils
+install: dep install_cfg install_mlutils install_n_datasets
 
 
 dep: $(REQUIREMENTS)
 	$(PIP) install -r $^
 
 
-cfg:
-	$(MAKE) -C $(CFG_DIR)
+install_cfg: $(CFG_DIR)
+	$(MAKE) -C $^ install
 
 
-mlutils:
-	$(MAKE) -C $(MLUTILS_DIR)
+install_mlutils: $(MLUTILS_DIR)
+	$(MAKE) -C $^ install
 
 
-install_cfg:
-	$(MAKE) -C $(CFG_DIR) install
-
-
-install_mlutils:
-	$(MAKE) -C $(MLUTILS_DIR) install
-
-
-commit: .git
-	# NOT RECOMMENDED 
-	git add -A
-	-git commit -m 'Updaet project'
-
-
-push: commit
-	git push
+install_n_datasets: $(NATURE_DATASETS)
+	$(MAKE) -C $^ install

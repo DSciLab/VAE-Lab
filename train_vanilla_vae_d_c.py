@@ -32,7 +32,7 @@ def main(opt):
 
 if __name__ == '__main__':
     '''
-    VAE with discriminator
+    VAE with discriminator and classifier
     '''
     Opts.add_yaml('dataset', 'CELEBA', './conf/dataset/celeba.yaml')
     Opts.add_yaml('dataset', 'MNIST', './conf/dataset/mnist.yaml')
@@ -48,8 +48,8 @@ if __name__ == '__main__':
     Opts.add_int('dashboard_port', 10010)
     Opts.add_int('dashboard_server', False)
     Opts.add_string('normalize', 'linear')
-    Opts.add_string('dataset', 'CELEBA', 'dataset name')
-    Opts.add_string('trainer', 'VanillaVAED')
+    Opts.add_string('dataset', 'MNIST', 'dataset name')
+    Opts.add_string('trainer', 'VanillaVAEDC')
 
     opt = Opts()
 

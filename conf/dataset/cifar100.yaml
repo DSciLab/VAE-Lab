@@ -1,0 +1,5 @@
+data_root: /data/cwj/data/VAELab
+image_chan: 3
+batch_size: 256
+image_size: 32
+num_classes: 100

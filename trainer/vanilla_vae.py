@@ -1,7 +1,10 @@
 import torch
 from torch.nn import functional as F
+from torch.optim.adam import Adam
+from torch.optim.lr_scheduler import MultiStepLR
 from mlutils import Trainer
 from mlutils import Log
+from networks.vae.vanilla import VanillaVAE
 
 
 def vae_ll_loss(gen_images, images, mu, logvar,
@@ -19,13 +22,16 @@ def vae_ll_loss(gen_images, images, mu, logvar,
     return loss, recons_loss, kld_loss
 
 
-class VAETrainer(Trainer):
-    def __init__(self, opt, model, optimizer=None, scheduler=None):
+class VanillaVAETrainer(Trainer):
+    def __init__(self, opt):
         super().__init__(opt)
         self.kld_weight = opt.kld_weight
-        self.model = self.to_gpu(model)
-        self.optimizer = optimizer
-        self.scheduler = scheduler
+        vae = VanillaVAE(opt)
+        self.model = self.to_gpu(vae)
+        self.optimizer = Adam(vae.parameters(), lr=opt.lr)
+        self.scheduler = MultiStepLR(self.optimizer,
+                                     milestones=[50, 80],
+                                     gamma=0.1)
         self.loss_fn = vae_ll_loss
 
     def train_step(self, item):
